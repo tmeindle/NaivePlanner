@@ -1,0 +1,5 @@
+﻿(define (problem CakeProblem)
+	(:domain CakeDomain)
+	(:init (HC) (NotAC))
+	(:goal (and (HC) (AC)) )
+)

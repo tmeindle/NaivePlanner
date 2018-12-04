@@ -158,9 +158,11 @@ namespace NaivePlanner
                 }
 
                 var sb = new StringBuilder(predicate.Name);
-                sb.Append('_');
-                sb.Append(string.Join("_", paramValues));
-
+                if (paramValues.Length > 0)
+                {
+                    sb.Append('_');
+                    sb.Append(string.Join("_", paramValues));
+                }
                 yield return sb.ToString();
 
                 for (int i = 0; i <= listsIndexes.Length; i++)
@@ -263,9 +265,11 @@ namespace NaivePlanner
                 }
 
                 var sb = new StringBuilder(action.Name);
-                sb.Append('_');
-                sb.Append(string.Join("_", paramValues));
-
+                if (paramValues.Length > 0)
+                {
+                    sb.Append('_');
+                    sb.Append(string.Join("_", paramValues));
+                }
                 yield return sb.ToString();
 
                 for (int i = 0; i <= listsIndexes.Length; i++)
@@ -545,27 +549,306 @@ namespace NaivePlanner
 
 
 
+        static public IEnumerable<PddlAction> GetPreconditionActions(PddlDomain domain, PddlProblem problem, string precondition)
+        {
+            foreach (var action in domain.Actions)
+            {
+                foreach (var predicate in action.Preconditions)
+                {
+                    if (predicate.Name == precondition)
+                    {
+                        yield return action;
+                    }
+                }
+            }
+        }
+
+        static public IEnumerable<PddlAction> GetPreconditionActions(PddlDomain domain, PddlProblem problem, PddlPredicate precondition)
+        {
+            return GetPreconditionActions(domain, problem, precondition.Name);
+        }
+
+
+
+
+
     }
 
-    public class PddlObject
+    public class PddlObject : IEquatable<PddlObject>
     {
         public string Name { get; set; }
         public string Type { get; set; }
+
+        public PddlObject Copy()
+        {
+            return (PddlObject)this.MemberwiseClone();
+        }
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as PddlObject);
+        }
+
+
+        public bool Equals(PddlObject other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            if (Name == other.Name && Type == other.Type)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        static public bool operator ==(PddlObject x, PddlObject y)
+        {
+            if (ReferenceEquals(x, y)) //both null or both the same object
+            {
+                return true;
+            }
+            if (ReferenceEquals(x, null)) //x is null and y cannot be null or we would of returned 
+            {
+                return false;
+            }
+            else return x.Equals(y);
+        }
+
+        static public bool operator !=(PddlObject x, PddlObject y)
+        {
+            return !(x == y);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // disable overflow, for the unlikely possibility that you
+            {         // are compiling with overflow-checking enabled
+                int hash = 27;
+                hash = (13 * hash) + this.Name.GetHashCode();
+                hash = (13 * hash) + (this.Type == null ? 0 : this.Type.GetHashCode());
+                return hash;
+            }
+        }
+
+
     }
 
-    public class PddlPredicate
+    public class PddlPredicate : IEquatable<PddlPredicate>
     {
         public bool Negated { get; set; }
         public string Name { get; set; }
         public List<PddlObject> Parameters { get; set; }
+
+
+        public PddlPredicate Copy()
+        {
+            var copied = new PddlPredicate();
+            copied.Name = Name;
+            copied.Negated = Negated;
+            copied.Parameters = new List<PddlObject>(this.Parameters.Count);
+            foreach(var obj in Parameters)
+            {
+                copied.Parameters.Add(obj.Copy());
+            }
+            return copied;
+        }
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as PddlPredicate);
+        }
+
+        public bool Equals(PddlPredicate other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            if ((Negated == other.Negated) && (Name == other.Name) && (Parameters.Count == other.Parameters.Count))
+            {
+                for (int i = 0; i < Parameters.Count; i++) 
+                {
+                    if (Parameters[i] != other.Parameters[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static public bool operator==(PddlPredicate x, PddlPredicate y)
+        {
+            if (ReferenceEquals(x, y)) //both null or both the same object
+            {
+                return true;  
+            }
+            if (ReferenceEquals(x, null)) //x is null and y cannot be null or we would of returned 
+            {
+                return false;
+            }
+            else return x.Equals(y);
+
+        }
+
+        static public bool operator !=(PddlPredicate x, PddlPredicate y)
+        {
+            return !(x == y);
+        }
+
+        public override int GetHashCode()
+        {
+            return LiteralName.GetHashCode();
+        }
+
+        public string LiteralName
+        {
+            get
+            {
+                var sb = new StringBuilder(Name);
+                if (Parameters.Count > 0)
+                {
+                    foreach(var p in Parameters)
+                    {
+                        sb.Append("_");
+                        sb.Append(p.Name);
+                    }
+                }
+                return sb.ToString();
+            }
+        }
     }
 
-    public class PddlAction
+    public class PddlAction : IEquatable<PddlAction>
     {
         public string Name { get; set; }
         public List<PddlObject> Parameters { get; set; }
         public List<PddlPredicate> Preconditions { get; set; }
         public List<PddlPredicate> Effects { get; set; }
+        public string LiteralName
+        {
+            get
+            {
+                var sb = new StringBuilder(Name);
+                if (Parameters.Count > 0)
+                {
+                    foreach (var p in Parameters)
+                    {
+                        sb.Append("_");
+                        sb.Append(p.Name);
+                    }
+                }
+                return sb.ToString();
+            }
+        }
+
+
+        public PddlAction Copy()
+        {
+            var copied = new PddlAction();
+            copied.Name = Name;
+            copied.Parameters = new List<PddlObject>(this.Parameters.Count);
+            foreach (var obj in Parameters)
+            {
+                copied.Parameters.Add(obj.Copy());
+            }
+
+            copied.Preconditions = new List<PddlPredicate>(this.Preconditions.Count);
+            foreach (var pre in Preconditions)
+            {
+                copied.Preconditions.Add(pre.Copy());
+            }
+
+
+            copied.Effects = new List<PddlPredicate>(this.Effects.Count);
+            foreach (var eff in Effects)
+            {
+                copied.Effects.Add(eff.Copy());
+            }
+
+            return copied;
+        }
+
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as PddlAction);
+        }
+
+        public bool Equals(PddlAction other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            if (Name == other.Name && Parameters.Count == other.Parameters.Count && Preconditions.Count == other.Preconditions.Count && Effects.Count == other.Effects.Count)
+            {
+                for (int i = 0; i < Parameters.Count; i++)
+                {
+                    if (Parameters[i] != other.Parameters[i])
+                    {
+                        return false;
+                    }
+                }
+
+                for (int i = 0; i < Preconditions.Count; i++)
+                {
+                    if (Preconditions[i] != other.Preconditions[i])
+                    {
+                        return false;
+                    }
+                }
+
+                for (int i = 0; i < Effects.Count; i++)
+                {
+                    if (Effects[i] != other.Effects[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static public bool operator ==(PddlAction x, PddlAction y)
+        {
+            if (ReferenceEquals(x, y)) //both null or both the same object
+            {
+                return true;
+            }
+            if (ReferenceEquals(x, null)) //x is null and y cannot be null or we would of returned 
+            {
+                return false;
+            }
+            else return x.Equals(y);
+
+        }
+
+        static public bool operator !=(PddlAction x, PddlAction y)
+        {
+            return !(x == y);
+        }
+
+        public override int GetHashCode()
+        {
+            return LiteralName.GetHashCode();
+        }
     }
 
 

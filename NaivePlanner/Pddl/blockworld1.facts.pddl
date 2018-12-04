@@ -1,0 +1,15 @@
+﻿(define (problem blockworld_BAC_CBA)
+  (:domain blockworld)
+  (:objects A B C)
+  (:init
+    (clear B)
+    (on A B)
+    (on C A)
+    (ontable C))
+  (:goal (and
+    (ontable A)
+	(on A B)
+	(on B C )
+	(clear C)
+	)) 
+)

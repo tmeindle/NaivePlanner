@@ -1,0 +1,6 @@
+﻿(define (problem CakeProblem)
+	(:domain CakeDomain)
+	(:objects u)
+	(:init (HaveCake u) (NotAteCake u))
+	(:goal (and (HaveCake u) (AteCake u)) )
+)

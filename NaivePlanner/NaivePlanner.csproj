@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Assignment.cs" />
     <Compile Include="Cnf.cs" />
+    <Compile Include="PlanGraphBuilder.cs" />
     <Compile Include="SatPlanBuilder.cs" />
     <Compile Include="Pddl.cs" />
     <Compile Include="Pddl.g4.lexer.cs">
@@ -108,28 +109,46 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="blockworld.domain.pddl">
+    <None Include="Pddl\blockworld.domain.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="blockworld2.facts.pddl">
+    <None Include="Pddl\blockworld2.facts.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="coffee.domain.pddl">
+    <None Include="Pddl\cake2.domain.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="blockworld1.facts.pddl">
+    <None Include="Pddl\cake.domain.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="hanoi-2.facts.pddl">
+    <None Include="Pddl\cake2.facts.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="hanoi-3.facts.pddl">
+    <None Include="Pddl\coffee.domain.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="coffee.facts.pddl">
+    <None Include="Pddl\blockworld1.facts.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="hanoi.domain.pddl">
+    <None Include="Pddl\cake.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\hanoi-4.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\monkey.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\hanoi-2.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\hanoi-3.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\coffee.facts.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Pddl\hanoi.domain.pddl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -137,6 +156,11 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>NaivePlanner</CustomToolNamespace>
     </Antlr4>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pddl\monkey.domain.pddl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
