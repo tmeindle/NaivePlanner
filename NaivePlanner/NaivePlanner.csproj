@@ -156,6 +156,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>NaivePlanner</CustomToolNamespace>
     </Antlr4>
+    <None Include="Slides.pptx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Pddl\monkey.domain.pddl">
