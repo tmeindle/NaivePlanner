@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaivePlanner", "NaivePlanner\NaivePlanner.csproj", "{B1E11649-C2ED-432B-B144-12D1A3A82BBD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{693185FA-294A-4255-BC8B-9F07DCAEF57F}"
+	ProjectSection(SolutionItems) = preProject
+		Slides.pptx = Slides.pptx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
